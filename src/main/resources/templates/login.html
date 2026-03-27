@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Spring Security Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .info-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .info-box h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .info-box p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        hr {
+            margin: 20px 0;
+            border: none;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div class="login-header">
+        <h2> Authentification</h2>
+        <p>Veuillez vous connecter pour accéder à votre espace</p>
+    </div>
+
+    <!-- Messages d'erreur et de succès -->
+    <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}">
+        Message d'erreur
+    </div>
+
+    <div th:if="${logoutMessage}" class="alert alert-success" th:text="${logoutMessage}">
+        Message de déconnexion
+    </div>
+
+    <!-- Formulaire de connexion -->
+    <form th:action="@{/authenticate}" method="post">
+        <div class="form-group">
+            <label for="username">Nom d'utilisateur :</label>
+            <input type="text" id="username" name="username" required autofocus />
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mot de passe :</label>
+            <input type="password" id="password" name="password" required />
+        </div>
+
+        <button type="submit">Se connecter</button>
+    </form>
+
+    <hr />
+
+    <div class="info-box">
+        <h4> Comptes de démonstration :</h4>
+        <p><strong>Admin :</strong> admin / 1234 (accès complet)</p>
+        <p><strong>Manager :</strong> manager / 2222 (accès manager et user)</p>
+        <p><strong>User :</strong> user / 1111 (accès user uniquement)</p>
+    </div>
+</div>
+</body>
+</html>

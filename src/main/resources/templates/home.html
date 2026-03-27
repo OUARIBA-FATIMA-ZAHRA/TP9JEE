@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Spring Security Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .navbar-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar-menu a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .welcome-card h1 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+        }
+
+        .dashboard-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .dashboard-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-card p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: opacity 0.3s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="navbar-brand">Spring Security Demo</div>
+    <div class="navbar-menu">
+        <a href="/home">Accueil</a>
+        <a href="/public/info">Public</a>
+        <a th:if="${#authorization.expression('hasRole(''USER'')')}" href="/user/dashboard">User</a>
+        <a th:if="${#authorization.expression('hasRole(''MANAGER'')')}" href="/manager/dashboard">Manager</a>
+        <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" href="/admin/dashboard">Admin</a>
+        <form th:action="@{/logout}" method="post" style="display: inline;">
+            <button type="submit" class="btn logout-btn" style="background: none; border: none; padding: 0.5rem 1rem;">Déconnexion</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="welcome-card">
+        <h1 th:text="${message}">Bienvenue</h1>
+        <div class="user-info">
+            <p> <strong>Utilisateur connecté :</strong> <span sec:authentication="name">Nom utilisateur</span></p>
+            <p> <strong>Rôles :</strong> <span sec:authentication="authorities">Rôles</span></p>
+        </div>
+    </div>
+
+    <h2>Accès disponibles :</h2>
+    <div class="dashboard-links">
+        <div class="dashboard-card">
+            <h3> Espace Public</h3>
+            <p>Informations accessibles sans authentification</p>
+            <a href="/public/info" class="btn">Accéder</a>
+        </div>
+
+        <div class="dashboard-card" sec:authorize="hasRole('USER')">
+            <h3> Espace Utilisateur</h3>
+            <p>Réservé aux utilisateurs authentifiés avec le rôle USER</p>
+            <a href="/user/dashboard" class="btn">Accéder</a>
+        </div>
+
+        <div class="dashboard-card" sec:authorize="hasRole('MANAGER')">
+            <h3> Espace Manager</h3>
+            <p>Réservé aux managers et administrateurs</p>
+            <a href="/manager/dashboard" class="btn">Accéder</a>
+        </div>
+
+        <div class="dashboard-card" sec:authorize="hasRole('ADMIN')">
+            <h3>⚙ Espace Administrateur</h3>
+            <p>Réservé aux administrateurs uniquement</p>
+            <a href="/admin/dashboard" class="btn">Accéder</a>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>Spring Security Demo - TP d'apprentissage</p>
+</footer>
+</body>
+</html>
